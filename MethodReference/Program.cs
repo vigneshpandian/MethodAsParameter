@@ -30,6 +30,12 @@ namespace MethodReference
 
             Console.WriteLine(Result);
 
+            oProgram.callCounter = 1; //resets counter to test the below method
+
+            oProgram.TryExecute(() => oProgram.PrintNameAfterMultipleTimes("Void method atlast executed"), 3);
+
+            
+
             Console.Read();
         }
 
@@ -48,6 +54,19 @@ namespace MethodReference
             if (callCounter >= 3)
             {
                 return name;
+            }
+            else
+            {
+                callCounter++;
+                throw new Exception("I'm not satisfied with the result");
+            }
+        }
+
+        public void PrintNameAfterMultipleTimes(string name)
+        {
+            if (callCounter >= 3)
+            {
+                Console.WriteLine( name);
             }
             else
             {
@@ -101,6 +120,32 @@ namespace MethodReference
             while (!isSuccess && attemptMade < howManyTimes);
 
             return result;
+        }
+
+        public void TryExecute(Action action, int howManyTimes)
+        {
+            bool isSuccess = false;
+
+            int attemptMade = 0;
+
+            do
+            {
+                try
+                {
+                    attemptMade++;
+
+                    Console.WriteLine("Attempt :" + attemptMade);
+
+                    action();
+
+                    isSuccess = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            while (!isSuccess && attemptMade < howManyTimes);
         }
 
     }
